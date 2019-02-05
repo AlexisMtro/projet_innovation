@@ -29,21 +29,42 @@ namespace WindowsFormsApp3
         {
             InitializeComponent();
             mciSendString("open new Type waveaudio alias recsound", null, 0, IntPtr.Zero);
-            ButtonStopRecord.Click += new EventHandler(this.Button1_Click);
+            //ButtonStopRecord.Click += new EventHandler(this.Button1_Click);
+
+        }
+
+        private void GetSream(string UserFilePath)
+        {
+            //Nom du fichier de stream
+            string FileStream = "StreamVoidReader.txt";
+            string pathuser = Path.Combine(path, UserFilePath); 
+            string PathFileStreamer = Path.Combine(Application.StartupPath, FileStream);
+
+            //Copier le contenu du fichier local dans un fichier externe pour visualisation et modification.
+            if (!File.Exists(PathFileStreamer))
+            {
+                File.Copy(pathuser, PathFileStreamer);
+            }
+            else
+            {
+                richTextBox1.Text = File.ReadAllText(PathFileStreamer);
+
+            }
+
+
 
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
+
             /*
             mciSendString("save recsound C:\\Users\\Hadenos_EZ\\Desktop\\Test_Audio\\Value.wav", null, 0, IntPtr.Zero);
             mciSendString("close recsound ", null, 0, IntPtr.Zero);
             */
             try
-            {
-                
+            {                
                 RecEngin.LoadGrammarAsync(grammar);
-                
                 RecEngin.RecognizeAsyncStop();
             }
             catch
@@ -55,10 +76,13 @@ namespace WindowsFormsApp3
 
         private void Button2_Click(object sender, EventArgs e)
         {
+
+
+            
             if(CurrentFunction == false)
             {
 
-                pictureBox1.Image = Image.FromFile("C:\\Users\\celia\\Desktop\\testg.gif");
+                //pictureBox1.Image = Image.FromFile("C:\\Users\\celia\\Desktop\\testg.gif");
                 commands.Add(new string[] { "test", "print my name" });
                 gBuilder = new GrammarBuilder();
                 gBuilder.Append(commands);
@@ -68,6 +92,7 @@ namespace WindowsFormsApp3
                 RecEngin.RecognizeAsync(RecognizeMode.Multiple);
                 RecEngin.SpeechRecognized += RecognizeWord;
                 CurrentFunction = true;
+                GetSream("testInnovation.txt");
             }
             else
             {
@@ -76,7 +101,7 @@ namespace WindowsFormsApp3
                 pictureBox1.Image = null; 
             }
 
-
+            
         }
         public void WriteFile(string fn)
         {

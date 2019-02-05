@@ -14,9 +14,16 @@ namespace WindowsFormsApp3
         [STAThread]
         static void Main()
         {
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+        }
+        static void OnProcessExit(object sender, EventArgs e)
+        {
+            string FileStream = "StreamVoidReader.txt";
+            string PathFileStreamer = System.IO.Path.Combine(Application.StartupPath, FileStream);
+            System.IO.File.Delete(PathFileStreamer);
         }
     }
 }
