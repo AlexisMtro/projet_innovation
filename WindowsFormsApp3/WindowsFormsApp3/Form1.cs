@@ -33,28 +33,6 @@ namespace WindowsFormsApp3
 
         }
 
-        private void GetSream(string UserFilePath)
-        {
-            //Nom du fichier de stream
-            string FileStream = "StreamVoidReader.txt";
-            string pathuser = Path.Combine(path, UserFilePath); 
-            string PathFileStreamer = Path.Combine(Application.StartupPath, FileStream);
-
-            //Copier le contenu du fichier local dans un fichier externe pour visualisation et modification.
-            if (!File.Exists(PathFileStreamer))
-            {
-                File.Copy(pathuser, PathFileStreamer);
-            }
-            else
-            {
-                richTextBox1.Text = File.ReadAllText(PathFileStreamer);
-
-            }
-
-
-
-        }
-
         private void Button1_Click(object sender, EventArgs e)
         {
 
@@ -74,15 +52,12 @@ namespace WindowsFormsApp3
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
-        {
+        private void Button2_Click(object sender, EventArgs e)        {
 
 
             
             if(CurrentFunction == false)
             {
-
-                //pictureBox1.Image = Image.FromFile("C:\\Users\\celia\\Desktop\\testg.gif");
                 commands.Add(new string[] { "test", "print my name" });
                 gBuilder = new GrammarBuilder();
                 gBuilder.Append(commands);
@@ -92,13 +67,12 @@ namespace WindowsFormsApp3
                 RecEngin.RecognizeAsync(RecognizeMode.Multiple);
                 RecEngin.SpeechRecognized += RecognizeWord;
                 CurrentFunction = true;
-                GetSream("testInnovation.txt");
+
             }
             else
             {
                 RecEngin.RecognizeAsyncStop();
                 CurrentFunction = false;
-                pictureBox1.Image = null; 
             }
 
             
@@ -128,5 +102,74 @@ namespace WindowsFormsApp3
             }
         }
 
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if(TextBoxPath.Text != null)
+            {
+                if (CheckIsAFile(TextBoxPath.Text)){
+                    GetSream(TextBoxPath.Text);
+                }
+                else
+                {
+                    MessageBox.Show("Le fichier spécifier n'éxiste pas.", "Erreur");
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Le champs <Chemin du fichier> doit être remplit pour pouvoir utiliser les fonctions", "Erreur"); 
+            }
+        }
+
+        private void FileTraitement()
+        {
+            string[] tab = richTextBox1.Lines; 
+            for(int i = 0; i<tab.Length;i++)
+            {
+                tab[i] = i.ToString() + " : " + tab[i].ToString();
+            }
+            richTextBox1.Lines = tab;
+            this.Hide();
+            this.Show();
+        }
+
+        private bool CheckIsAFile(String UserFilePath)
+        {
+            string pathuser = Path.Combine(path, UserFilePath);
+            if (File.Exists(pathuser))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void GetSream(string UserFilePath)
+        {
+            //Nom du fichier de stream
+            string FileStream = "StreamVoidReader.txt";
+            string pathuser = Path.Combine(path, UserFilePath);
+            string PathFileStreamer = Path.Combine(Application.StartupPath, FileStream);
+
+            //Copier le contenu du fichier local dans un fichier externe pour visualisation et modification.
+            if (!File.Exists(PathFileStreamer))
+            {
+                File.Copy(pathuser, PathFileStreamer);
+                richTextBox1.Text = File.ReadAllText(PathFileStreamer);
+                FileTraitement();
+            }
+            else
+            {
+                richTextBox1.Text = File.ReadAllText(PathFileStreamer);
+                FileTraitement(); 
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
