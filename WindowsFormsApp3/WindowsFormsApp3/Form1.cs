@@ -16,7 +16,7 @@ namespace WindowsFormsApp3
     public partial class Form1 : Form
     {
         SpeechRecognitionEngine RecEngin = new SpeechRecognitionEngine();
-        bool CurrentFunction = false; 
+        bool CurrentFunction = false;
         string path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         [DllImport("winmm.dll")]
         private static extern long mciSendString(string command, StringBuilder retstring, int Returnlenth, IntPtr callback);
@@ -41,7 +41,7 @@ namespace WindowsFormsApp3
             mciSendString("close recsound ", null, 0, IntPtr.Zero);
             */
             try
-            {                
+            {
                 RecEngin.LoadGrammarAsync(grammar);
                 RecEngin.RecognizeAsyncStop();
             }
@@ -52,11 +52,12 @@ namespace WindowsFormsApp3
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)        {
+        private void Button2_Click(object sender, EventArgs e)
+        {
 
 
-            
-            if(CurrentFunction == false)
+
+            if (CurrentFunction == false)
             {
                 commands.Add(new string[] { "test", "print my name" });
                 gBuilder = new GrammarBuilder();
@@ -75,7 +76,7 @@ namespace WindowsFormsApp3
                 CurrentFunction = false;
             }
 
-            
+
         }
         public void WriteFile(string fn)
         {
@@ -104,9 +105,10 @@ namespace WindowsFormsApp3
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            if(TextBoxPath.Text != null)
+            if (TextBoxPath.Text != null)
             {
-                if (CheckIsAFile(TextBoxPath.Text)){
+                if (CheckIsAFile(TextBoxPath.Text))
+                {
                     GetSream(TextBoxPath.Text);
                 }
                 else
@@ -117,16 +119,17 @@ namespace WindowsFormsApp3
             }
             else
             {
-                MessageBox.Show("Le champs <Chemin du fichier> doit être remplit pour pouvoir utiliser les fonctions", "Erreur"); 
+                MessageBox.Show("Le champs <Chemin du fichier> doit être remplit pour pouvoir utiliser les fonctions", "Erreur");
             }
         }
 
         private void FileTraitement()
         {
-            string[] tab = richTextBox1.Lines; 
-            for(int i = 0; i<tab.Length;i++)
+            string[] tab = richTextBox1.Lines;
+            for (int i = 0; i < tab.Length; i++)
             {
-                tab[i] = i.ToString() + " : " + tab[i].ToString();
+                int index = i+1;
+                tab[i] = index.ToString()+ " : " + tab[i].ToString();
             }
             richTextBox1.Lines = tab;
             this.Hide();
@@ -163,7 +166,7 @@ namespace WindowsFormsApp3
             else
             {
                 richTextBox1.Text = File.ReadAllText(PathFileStreamer);
-                FileTraitement(); 
+                FileTraitement();
             }
         }
 
@@ -171,5 +174,37 @@ namespace WindowsFormsApp3
         {
 
         }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            string FileStream = "StreamVoidReader.txt";
+         
+            string PathFileStreamer = Path.Combine(Application.StartupPath, FileStream);
+
+            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                string file = openFileDialog1.FileName;
+                try
+                {
+                    string UserFilePath = openFileDialog1.FileName;
+                    string pathuser = Path.Combine(path, UserFilePath);
+                    string text = File.ReadAllText(file);
+                    File.Copy(pathuser, PathFileStreamer);
+                    richTextBox1.Text = File.ReadAllText(PathFileStreamer);
+                    TextBoxPath.Text = PathFileStreamer; 
+                    FileTraitement();
+                }
+                catch (IOException)
+                {
+                }
+            }
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
     }
+
 }
