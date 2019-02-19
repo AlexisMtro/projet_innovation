@@ -54,9 +54,6 @@ namespace WindowsFormsApp3
 
         private void Button2_Click(object sender, EventArgs e)
         {
-
-
-
             if (CurrentFunction == false)
             {
                 commands.Add(new string[] { "test", "print my name" });
@@ -68,15 +65,12 @@ namespace WindowsFormsApp3
                 RecEngin.RecognizeAsync(RecognizeMode.Multiple);
                 RecEngin.SpeechRecognized += RecognizeWord;
                 CurrentFunction = true;
-
             }
             else
             {
                 RecEngin.RecognizeAsyncStop();
                 CurrentFunction = false;
             }
-
-
         }
         public void WriteFile(string fn)
         {
@@ -87,7 +81,7 @@ namespace WindowsFormsApp3
                 {
 
                     sw.WriteLine("On a reussi à écrire dans le fichier.");
-
+                    sw.Dispose();
                 }
             }
         }
@@ -128,8 +122,7 @@ namespace WindowsFormsApp3
             string[] tab = richTextBox1.Lines;
             for (int i = 0; i < tab.Length; i++)
             {
-                int index = i+1;
-                tab[i] = index.ToString()+ " : " + tab[i].ToString();
+                tab[i] = tab[i].ToString();
             }
             richTextBox1.Lines = tab;
             this.Hide();
@@ -170,9 +163,20 @@ namespace WindowsFormsApp3
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void SaveData(string UserFilePath)
         {
+            string FileStream = "StreamVoidReader.txt";
+            string pathuser = Path.Combine(path, UserFilePath);
+            string PathFileStreamer = Path.Combine(Application.StartupPath, FileStream);
+            string[] tab ;
 
+            tab = richTextBox1.Lines;
+            if (System.IO.File.Exists(pathuser) && tab.Length != 0)
+            {
+                File.WriteAllLines(pathuser, tab);
+                label2.Text = "Le fichier à été enregistré";
+                label2.Visible = true; 
+            }
         }
 
         private void button2_Click_1(object sender, EventArgs e)
@@ -196,15 +200,22 @@ namespace WindowsFormsApp3
                     FileTraitement();
                 }
                 catch (IOException)
-                {
+                { 
                 }
             }
         }
 
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        private void button1_Click_2(object sender, EventArgs e)
         {
+            string UserFilePath = openFileDialog1.FileName;
+            string pathuser = Path.Combine(path, UserFilePath);
+            SaveData(openFileDialog1.FileName); 
+        }
 
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            label2.Text = "";
+            label2.Visible = false; 
         }
     }
-
 }
